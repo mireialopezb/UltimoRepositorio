@@ -1,0 +1,10 @@
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\bin\Debug\QuienEsQuien.exe
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\bin\Debug\QuienEsQuien.pdb
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Form2.resources
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.csproj.GenerateResource.Cache
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.exe
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.pdb
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.csprojResolveAssemblyReference.cache
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Form3.resources
