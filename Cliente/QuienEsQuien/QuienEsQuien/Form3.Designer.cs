@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.Resolver_groupBox = new System.Windows.Forms.GroupBox();
+            this.jugador_personaje_grid = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.personaje_textBox = new System.Windows.Forms.TextBox();
             this.Confirmar = new System.Windows.Forms.Button();
             this.Atras = new System.Windows.Forms.Button();
-            this.Resolver = new System.Windows.Forms.Button();
             this.panel_Resolver = new System.Windows.Forms.Panel();
+            this.Resolver = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.Seleccionar_button = new System.Windows.Forms.Button();
             this.panel_Seleccionado = new System.Windows.Forms.Panel();
@@ -75,37 +79,66 @@
             this.rival = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.Duracion_label = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.Enviar2 = new System.Windows.Forms.Button();
-            this.Chat_textBox2 = new System.Windows.Forms.TextBox();
+            this.nombre_lbl = new System.Windows.Forms.Label();
             this.Resolver_groupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.jugador_personaje_grid)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.Chat_groupBox.SuspendLayout();
             this.Tablero.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Resolver_groupBox
             // 
-            this.Resolver_groupBox.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.Resolver_groupBox.BackColor = System.Drawing.Color.Transparent;
+            this.Resolver_groupBox.Controls.Add(this.jugador_personaje_grid);
+            this.Resolver_groupBox.Controls.Add(this.label1);
+            this.Resolver_groupBox.Controls.Add(this.personaje_textBox);
             this.Resolver_groupBox.Controls.Add(this.Confirmar);
             this.Resolver_groupBox.Controls.Add(this.Atras);
-            this.Resolver_groupBox.Controls.Add(this.Resolver);
             this.Resolver_groupBox.Controls.Add(this.panel_Resolver);
-            this.Resolver_groupBox.Location = new System.Drawing.Point(47, 501);
+            this.Resolver_groupBox.Location = new System.Drawing.Point(88, 436);
             this.Resolver_groupBox.Name = "Resolver_groupBox";
-            this.Resolver_groupBox.Size = new System.Drawing.Size(200, 302);
+            this.Resolver_groupBox.Size = new System.Drawing.Size(200, 424);
             this.Resolver_groupBox.TabIndex = 22;
             this.Resolver_groupBox.TabStop = false;
-            this.Resolver_groupBox.Text = "Creo que es...";
+            this.Resolver_groupBox.Text = "Personaje de...";
             this.Resolver_groupBox.UseCompatibleTextRendering = true;
+            this.Resolver_groupBox.Visible = false;
+            // 
+            // jugador_personaje_grid
+            // 
+            this.jugador_personaje_grid.BackgroundColor = System.Drawing.Color.White;
+            this.jugador_personaje_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.jugador_personaje_grid.ColumnHeadersVisible = false;
+            this.jugador_personaje_grid.Location = new System.Drawing.Point(36, 23);
+            this.jugador_personaje_grid.Name = "jugador_personaje_grid";
+            this.jugador_personaje_grid.RowHeadersVisible = false;
+            this.jugador_personaje_grid.RowTemplate.Height = 24;
+            this.jugador_personaje_grid.Size = new System.Drawing.Size(128, 102);
+            this.jugador_personaje_grid.TabIndex = 5;
+            this.jugador_personaje_grid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.jugador_personaje_grid_CellContentClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(33, 159);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(32, 17);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Es: ";
+            // 
+            // personaje_textBox
+            // 
+            this.personaje_textBox.Location = new System.Drawing.Point(36, 134);
+            this.personaje_textBox.Name = "personaje_textBox";
+            this.personaje_textBox.Size = new System.Drawing.Size(128, 22);
+            this.personaje_textBox.TabIndex = 3;
             // 
             // Confirmar
             // 
-            this.Confirmar.Location = new System.Drawing.Point(36, 224);
+            this.Confirmar.Location = new System.Drawing.Point(36, 345);
             this.Confirmar.Name = "Confirmar";
-            this.Confirmar.Size = new System.Drawing.Size(131, 33);
+            this.Confirmar.Size = new System.Drawing.Size(131, 29);
             this.Confirmar.TabIndex = 2;
             this.Confirmar.Text = "Confirmar";
             this.Confirmar.UseVisualStyleBackColor = true;
@@ -113,17 +146,26 @@
             // 
             // Atras
             // 
-            this.Atras.Location = new System.Drawing.Point(36, 258);
+            this.Atras.Location = new System.Drawing.Point(36, 379);
             this.Atras.Name = "Atras";
-            this.Atras.Size = new System.Drawing.Size(131, 33);
+            this.Atras.Size = new System.Drawing.Size(131, 27);
             this.Atras.TabIndex = 2;
             this.Atras.Text = "Atrás";
             this.Atras.UseVisualStyleBackColor = true;
             this.Atras.Click += new System.EventHandler(this.Atras_Click);
             // 
+            // panel_Resolver
+            // 
+            this.panel_Resolver.BackColor = System.Drawing.Color.Transparent;
+            this.panel_Resolver.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel_Resolver.Location = new System.Drawing.Point(36, 180);
+            this.panel_Resolver.Name = "panel_Resolver";
+            this.panel_Resolver.Size = new System.Drawing.Size(131, 158);
+            this.panel_Resolver.TabIndex = 0;
+            // 
             // Resolver
             // 
-            this.Resolver.Location = new System.Drawing.Point(36, 24);
+            this.Resolver.Location = new System.Drawing.Point(121, 397);
             this.Resolver.Name = "Resolver";
             this.Resolver.Size = new System.Drawing.Size(131, 33);
             this.Resolver.TabIndex = 1;
@@ -131,23 +173,14 @@
             this.Resolver.UseVisualStyleBackColor = true;
             this.Resolver.Click += new System.EventHandler(this.Resolver_Click);
             // 
-            // panel_Resolver
-            // 
-            this.panel_Resolver.BackColor = System.Drawing.Color.LightGray;
-            this.panel_Resolver.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel_Resolver.Location = new System.Drawing.Point(36, 62);
-            this.panel_Resolver.Name = "panel_Resolver";
-            this.panel_Resolver.Size = new System.Drawing.Size(131, 158);
-            this.panel_Resolver.TabIndex = 0;
-            // 
             // groupBox3
             // 
-            this.groupBox3.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.groupBox3.BackColor = System.Drawing.Color.Transparent;
             this.groupBox3.Controls.Add(this.Seleccionar_button);
             this.groupBox3.Controls.Add(this.panel_Seleccionado);
-            this.groupBox3.Location = new System.Drawing.Point(262, 501);
+            this.groupBox3.Location = new System.Drawing.Point(88, 96);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 302);
+            this.groupBox3.Size = new System.Drawing.Size(200, 290);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "¿Quieres que este sea tu personaje?";
@@ -164,7 +197,7 @@
             // 
             // panel_Seleccionado
             // 
-            this.panel_Seleccionado.BackColor = System.Drawing.Color.LightGray;
+            this.panel_Seleccionado.BackColor = System.Drawing.Color.Transparent;
             this.panel_Seleccionado.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel_Seleccionado.Location = new System.Drawing.Point(34, 56);
             this.panel_Seleccionado.Name = "panel_Seleccionado";
@@ -173,15 +206,15 @@
             // 
             // Chat_groupBox
             // 
-            this.Chat_groupBox.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.Chat_groupBox.BackColor = System.Drawing.Color.Transparent;
             this.Chat_groupBox.Controls.Add(this.Chat_listBox);
             this.Chat_groupBox.Controls.Add(this.Enviar);
             this.Chat_groupBox.Controls.Add(this.Chat_TextBox);
-            this.Chat_groupBox.Location = new System.Drawing.Point(47, 73);
+            this.Chat_groupBox.Location = new System.Drawing.Point(1408, 96);
             this.Chat_groupBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Chat_groupBox.Name = "Chat_groupBox";
             this.Chat_groupBox.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Chat_groupBox.Size = new System.Drawing.Size(415, 417);
+            this.Chat_groupBox.Size = new System.Drawing.Size(415, 764);
             this.Chat_groupBox.TabIndex = 20;
             this.Chat_groupBox.TabStop = false;
             this.Chat_groupBox.Text = "Chat";
@@ -192,9 +225,9 @@
             this.Chat_listBox.FormattingEnabled = true;
             this.Chat_listBox.HorizontalScrollbar = true;
             this.Chat_listBox.ItemHeight = 16;
-            this.Chat_listBox.Location = new System.Drawing.Point(9, 34);
+            this.Chat_listBox.Location = new System.Drawing.Point(9, 20);
             this.Chat_listBox.Name = "Chat_listBox";
-            this.Chat_listBox.Size = new System.Drawing.Size(390, 340);
+            this.Chat_listBox.Size = new System.Drawing.Size(390, 692);
             this.Chat_listBox.TabIndex = 26;
             this.Chat_listBox.TabStop = false;
             this.Chat_listBox.UseTabStops = false;
@@ -202,24 +235,27 @@
             // 
             // Enviar
             // 
-            this.Enviar.Location = new System.Drawing.Point(321, 380);
+            this.Enviar.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.Enviar.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.Enviar.Location = new System.Drawing.Point(321, 717);
             this.Enviar.Name = "Enviar";
-            this.Enviar.Size = new System.Drawing.Size(78, 27);
+            this.Enviar.Size = new System.Drawing.Size(78, 32);
             this.Enviar.TabIndex = 2;
             this.Enviar.Text = "Enviar";
-            this.Enviar.UseVisualStyleBackColor = true;
+            this.Enviar.UseVisualStyleBackColor = false;
             this.Enviar.Click += new System.EventHandler(this.Enviar_Click);
             // 
             // Chat_TextBox
             // 
-            this.Chat_TextBox.Location = new System.Drawing.Point(9, 382);
+            this.Chat_TextBox.Location = new System.Drawing.Point(9, 722);
             this.Chat_TextBox.Name = "Chat_TextBox";
             this.Chat_TextBox.Size = new System.Drawing.Size(306, 22);
             this.Chat_TextBox.TabIndex = 1;
             // 
             // Tablero
             // 
-            this.Tablero.BackColor = System.Drawing.Color.Silver;
+            this.Tablero.BackColor = System.Drawing.Color.Transparent;
+            this.Tablero.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Tablero.Controls.Add(this.CristinaB_button);
             this.Tablero.Controls.Add(this.Gabri_button);
             this.Tablero.Controls.Add(this.Julen_button);
@@ -250,7 +286,7 @@
             this.Tablero.Controls.Add(this.panel_Antonia);
             this.Tablero.Controls.Add(this.panel_Javi);
             this.Tablero.Controls.Add(this.panel_Emma);
-            this.Tablero.Location = new System.Drawing.Point(481, 39);
+            this.Tablero.Location = new System.Drawing.Point(368, 96);
             this.Tablero.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Tablero.Name = "Tablero";
             this.Tablero.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -561,7 +597,8 @@
             // rival
             // 
             this.rival.AutoSize = true;
-            this.rival.Location = new System.Drawing.Point(44, 39);
+            this.rival.BackColor = System.Drawing.Color.Transparent;
+            this.rival.Location = new System.Drawing.Point(85, 62);
             this.rival.Name = "rival";
             this.rival.Size = new System.Drawing.Size(47, 17);
             this.rival.TabIndex = 27;
@@ -575,83 +612,50 @@
             // Duracion_label
             // 
             this.Duracion_label.AutoSize = true;
-            this.Duracion_label.Location = new System.Drawing.Point(293, 39);
+            this.Duracion_label.Location = new System.Drawing.Point(32, 33);
             this.Duracion_label.Name = "Duracion_label";
             this.Duracion_label.Size = new System.Drawing.Size(16, 17);
             this.Duracion_label.TabIndex = 28;
             this.Duracion_label.Text = "0";
             this.Duracion_label.Visible = false;
             // 
-            // groupBox1
+            // nombre_lbl
             // 
-            this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.groupBox1.Controls.Add(this.listBox1);
-            this.groupBox1.Controls.Add(this.Enviar2);
-            this.groupBox1.Controls.Add(this.Chat_textBox2);
-            this.groupBox1.Location = new System.Drawing.Point(1494, 39);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(372, 764);
-            this.groupBox1.TabIndex = 29;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Chat";
-            this.groupBox1.Visible = false;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.HorizontalScrollbar = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(14, 27);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(344, 692);
-            this.listBox1.TabIndex = 26;
-            this.listBox1.TabStop = false;
-            this.listBox1.UseTabStops = false;
-            this.listBox1.UseWaitCursor = true;
-            // 
-            // Enviar2
-            // 
-            this.Enviar2.Location = new System.Drawing.Point(280, 726);
-            this.Enviar2.Name = "Enviar2";
-            this.Enviar2.Size = new System.Drawing.Size(78, 27);
-            this.Enviar2.TabIndex = 2;
-            this.Enviar2.Text = "Enviar";
-            this.Enviar2.UseVisualStyleBackColor = true;
-            this.Enviar2.Click += new System.EventHandler(this.Enviar2_Click);
-            // 
-            // Chat_textBox2
-            // 
-            this.Chat_textBox2.Location = new System.Drawing.Point(15, 729);
-            this.Chat_textBox2.Name = "Chat_textBox2";
-            this.Chat_textBox2.Size = new System.Drawing.Size(247, 22);
-            this.Chat_textBox2.TabIndex = 1;
+            this.nombre_lbl.AutoSize = true;
+            this.nombre_lbl.BackColor = System.Drawing.Color.Transparent;
+            this.nombre_lbl.Location = new System.Drawing.Point(1726, 62);
+            this.nombre_lbl.Name = "nombre_lbl";
+            this.nombre_lbl.Size = new System.Drawing.Size(46, 17);
+            this.nombre_lbl.TabIndex = 29;
+            this.nombre_lbl.Text = "label2";
             // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1878, 843);
-            this.Controls.Add(this.groupBox1);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(1890, 876);
+            this.Controls.Add(this.nombre_lbl);
             this.Controls.Add(this.Duracion_label);
             this.Controls.Add(this.rival);
+            this.Controls.Add(this.Resolver);
             this.Controls.Add(this.Resolver_groupBox);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.Chat_groupBox);
             this.Controls.Add(this.Tablero);
+            this.DoubleBuffered = true;
             this.Name = "Form3";
             this.Text = "Partida";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form3_FormClosing);
             this.Load += new System.EventHandler(this.Form3_Load);
             this.Resolver_groupBox.ResumeLayout(false);
+            this.Resolver_groupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.jugador_personaje_grid)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.Chat_groupBox.ResumeLayout(false);
             this.Chat_groupBox.PerformLayout();
             this.Tablero.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -705,9 +709,9 @@
         private System.Windows.Forms.Label rival;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Label Duracion_label;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Button Enviar2;
-        private System.Windows.Forms.TextBox Chat_textBox2;
+        private System.Windows.Forms.TextBox personaje_textBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridView jugador_personaje_grid;
+        private System.Windows.Forms.Label nombre_lbl;
     }
 }

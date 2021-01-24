@@ -109,6 +109,7 @@ namespace WindowsFormsApplication1
             DelegadoParaActualizarLista delegado_consultas_caso5 = new DelegadoParaActualizarLista(PonLista1);
             DelegadoParaActualizarLista delegado_consultas_caso14 = new DelegadoParaActualizarLista(PonLista2);
             DelegadoParaActualizarLista delegado_consultas_caso13 = new DelegadoParaActualizarLista(PonLista3);
+            DelegadoParaActualizarLista delegado_consultas_caso4 = new DelegadoParaActualizarLista(PonLista4);
 
             switch (codigo)
             {
@@ -117,21 +118,7 @@ namespace WindowsFormsApplication1
                     Mensaje_label.Invoke(delegado, new object[] { mensaje });
                     break;
                 case 4:
-                    string personaje1 = trozos[2].Split('\0')[0];
-                    string personaje2 = trozos[3].Split('\0')[0];
-
-                    if (personaje1 == "0")
-                        if (personaje2 != "0")
-                            mensaje = "Personaje 1: no se escogió personaje, personaje 2: " + personaje2+".";
-                        else
-                            mensaje = "Personaje 1: no se escogió personaje, personaje 2: no se escogió personaje.";
-                    else
-                        if (personaje2 != "0")
-                            mensaje = "Personaje 1: " + personaje1 + ", personaje 2: " + personaje2+".";
-                        else
-                            mensaje = "Personaje 1: " + personaje1 + ", personaje 2: no se escogió personaje.";
-
-                    Mensaje_label.Invoke(delegado, new object[] { mensaje });
+                    Consulta_Grid.Invoke(delegado_consultas_caso4, new object[] { trozos });
                     break;
                 case 5:
                     Consulta_Grid.Invoke(delegado_consultas_caso5, new object[] { trozos });
@@ -152,7 +139,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonLista1(string[] trozos)
-        //codigo/num from/num partidas/nombre del rival-resultado
+        //codigo/num from/num partidas/id partida-nombre del rival-resultado
         {
             // El numero de partidas está en el trozo 1
             int n = Convert.ToInt32(trozos[2]);
@@ -162,18 +149,19 @@ namespace WindowsFormsApplication1
                 this.Mensaje_label.Text = "Este jugador no existe";
             else
             {
-                this.Consulta_Grid.ColumnCount = 2;
+                this.Consulta_Grid.ColumnCount = 3;
                 this.Consulta_Grid.RowCount = n + 1;
 
-                this.Consulta_Grid.Rows[0].Cells[0].Value = "Rival";
-                this.Consulta_Grid.Rows[0].Cells[1].Value = "Resultado";
+                this.Consulta_Grid.Rows[0].Cells[0].Value = "ID partida";
+                this.Consulta_Grid.Rows[0].Cells[1].Value = "Rivales";
+                this.Consulta_Grid.Rows[0].Cells[2].Value = "Resultado";
 
                 for (int i = 0; i < n; i++)
                 {
                     string[] mensaje = trozos[i + 3].Split('-');
-                    this.Mensaje_label.Text = mensaje[0] + " " + mensaje[1];
                     this.Consulta_Grid.Rows[i + 1].Cells[0].Value = mensaje[0];
                     this.Consulta_Grid.Rows[i + 1].Cells[1].Value = mensaje[1];
+                    this.Consulta_Grid.Rows[i + 1].Cells[2].Value = mensaje[2];
                 }
 
                 this.Mensaje_label.Text = "Ha jugado " + n + " partidas";
@@ -182,7 +170,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonLista2(string[] trozos)
-        //codigo/num form/num partidas/id partida-jugador1-jugador2-ganador/id partida...
+        //codigo/num form/num partidas/id partida-jugadores-ganador/id partida...
         {
             // El numero de partidas está en el trozo 1
             int n = Convert.ToInt32(trozos[2]);
@@ -190,24 +178,47 @@ namespace WindowsFormsApplication1
                 this.Mensaje_label.Text = "No hay ninguna partida que coincida con tu consulta.";
             else
             {
-                this.Consulta_Grid.ColumnCount = 4;
+                this.Consulta_Grid.ColumnCount = 3;
                 this.Consulta_Grid.RowCount = n + 1;
                 Consulta_Grid.Rows[0].Cells[0].Value = "ID partida";
-                Consulta_Grid.Rows[0].Cells[1].Value = "Jugador 1";
-                Consulta_Grid.Rows[0].Cells[2].Value = "Jugador 2";
-                Consulta_Grid.Rows[0].Cells[3].Value = "Ganador";
+                Consulta_Grid.Rows[0].Cells[1].Value = "Jugadores";
+                Consulta_Grid.Rows[0].Cells[2].Value = "Ganador";
                 for (int i = 0; i < n; i++)
                 {
                     string[] mensaje = trozos[i + 3].Split('-');
                     Consulta_Grid.Rows[i + 1].Cells[0].Value = mensaje[0];
                     Consulta_Grid.Rows[i + 1].Cells[1].Value = mensaje[1];
                     Consulta_Grid.Rows[i + 1].Cells[2].Value = mensaje[2];
-                    Consulta_Grid.Rows[i + 1].Cells[3].Value = mensaje[3];
                 }
                 this.Consulta_Grid.Visible = true;
             }
         }
 
+        private void PonLista4(string[] trozos)
+        //codigo/num form/num personajes/lista
+        {
+            int n = Convert.ToInt32(trozos[2]);
+            if (n == 0)
+                this.Mensaje_label.Text = "No se han encontrado datos de esta partida";
+            else
+            {
+                this.Consulta_Grid.ColumnCount = 2;
+                this.Consulta_Grid.RowCount = n;
+
+                for (int i = 0; i < n; i++)
+                {
+                    Consulta_Grid.Rows[i].Cells[0].Value = "Personaje " + (i + 1).ToString();
+
+                    if (trozos[3 + i] != "0")
+                        Consulta_Grid.Rows[i].Cells[1].Value = trozos[3 + i];
+                    else
+                        Consulta_Grid.Rows[i].Cells[1].Value = "No escogió personaje";
+                }
+
+                this.Mensaje_label.Text = "Se escogieron los siguientes personaje:";
+            }
+            this.Consulta_Grid.Visible = true;
+        }
         private void Form2_Load(object sender, EventArgs e)
         {
             this.Mensaje_label.Text = null;

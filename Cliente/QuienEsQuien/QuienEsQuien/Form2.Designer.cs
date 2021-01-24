@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.groupBox_consultas = new System.Windows.Forms.GroupBox();
             this.Mensaje_label = new System.Windows.Forms.Label();
             this.Fecha_Final = new System.Windows.Forms.TextBox();
@@ -53,7 +54,7 @@
             // 
             // groupBox_consultas
             // 
-            this.groupBox_consultas.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.groupBox_consultas.BackColor = System.Drawing.Color.Transparent;
             this.groupBox_consultas.Controls.Add(this.Mensaje_label);
             this.groupBox_consultas.Controls.Add(this.Fecha_Final);
             this.groupBox_consultas.Controls.Add(this.label6);
@@ -76,7 +77,7 @@
             this.groupBox_consultas.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox_consultas.Name = "groupBox_consultas";
             this.groupBox_consultas.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox_consultas.Size = new System.Drawing.Size(902, 395);
+            this.groupBox_consultas.Size = new System.Drawing.Size(810, 395);
             this.groupBox_consultas.TabIndex = 28;
             this.groupBox_consultas.TabStop = false;
             this.groupBox_consultas.Text = "¿Qué quieres saber?";
@@ -84,7 +85,7 @@
             // Mensaje_label
             // 
             this.Mensaje_label.AutoSize = true;
-            this.Mensaje_label.Location = new System.Drawing.Point(420, 96);
+            this.Mensaje_label.Location = new System.Drawing.Point(417, 38);
             this.Mensaje_label.Name = "Mensaje_label";
             this.Mensaje_label.Size = new System.Drawing.Size(61, 17);
             this.Mensaje_label.TabIndex = 30;
@@ -167,26 +168,30 @@
             // 
             // Consulta_Grid
             // 
+            this.Consulta_Grid.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.Consulta_Grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Consulta_Grid.ColumnHeadersVisible = false;
-            this.Consulta_Grid.Location = new System.Drawing.Point(423, 123);
+            this.Consulta_Grid.Location = new System.Drawing.Point(420, 65);
             this.Consulta_Grid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Consulta_Grid.Name = "Consulta_Grid";
             this.Consulta_Grid.RowHeadersVisible = false;
             this.Consulta_Grid.RowTemplate.Height = 24;
-            this.Consulta_Grid.Size = new System.Drawing.Size(437, 231);
+            this.Consulta_Grid.Size = new System.Drawing.Size(360, 255);
             this.Consulta_Grid.TabIndex = 8;
             this.Consulta_Grid.Visible = false;
             // 
             // Consulta_Button
             // 
-            this.Consulta_Button.Location = new System.Drawing.Point(752, 37);
+            this.Consulta_Button.BackColor = System.Drawing.Color.Transparent;
+            this.Consulta_Button.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.Consulta_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Consulta_Button.Location = new System.Drawing.Point(420, 326);
             this.Consulta_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Consulta_Button.Name = "Consulta_Button";
             this.Consulta_Button.Size = new System.Drawing.Size(108, 38);
             this.Consulta_Button.TabIndex = 2;
             this.Consulta_Button.Text = "Consulta";
-            this.Consulta_Button.UseVisualStyleBackColor = true;
+            this.Consulta_Button.UseVisualStyleBackColor = false;
             this.Consulta_Button.Click += new System.EventHandler(this.Consulta_Button_Click_1);
             // 
             // Partidas
@@ -263,7 +268,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(996, 466);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(897, 466);
             this.Controls.Add(this.groupBox_consultas);
             this.Name = "Form2";
             this.Text = "Consultas";

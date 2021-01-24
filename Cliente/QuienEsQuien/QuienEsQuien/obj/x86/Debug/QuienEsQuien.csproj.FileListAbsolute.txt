@@ -8,3 +8,4 @@ C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\
 C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.pdb
 C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\QuienEsQuien.csprojResolveAssemblyReference.cache
 C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Form3.resources
+C:\Users\mirei\OneDrive\Documents\UNI\2B\SO\Quien es quien\Cliente\QuienEsQuien\QuienEsQuien\obj\x86\Debug\WindowsFormsApplication1.Form4.resources
