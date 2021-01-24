@@ -80,6 +80,8 @@ namespace WindowsFormsApplication1
         }
 
         private void Iniciar_Button_Click(object sender, EventArgs e)
+            //coge el el nombre y contraseña introducidos por el cliente
+            // y lo envia al servidor para iniciar sesión
         {
             if (conectado == 0)
             {
@@ -120,6 +122,8 @@ namespace WindowsFormsApplication1
         }
 
         private void Registrarse_Button_Click(object sender, EventArgs e)
+            //coge el el nombre y contraseña introducidos por el cliente
+            // y lo envia al servidor para registrarse
         {
             if (conectado == 0)
             {
@@ -158,6 +162,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonerEnMarchaFormulario2()
+            //creamos un nuevo form2 (formulario para hacer consultas)
         {
             int cont = f2.Count;
             Form2 f = new Form2(cont, server,ID_jugador);
@@ -166,6 +171,9 @@ namespace WindowsFormsApplication1
         }
 
         private void PonerEnMarchaFormulario3()
+            //creamos un nuevo form3 (nueva partida)
+            //añadimos la lista de la lista de partidas y eliminamos 
+            // la invitación de la lista de invitaciones
         {
             int j = 0;
 
@@ -202,16 +210,10 @@ namespace WindowsFormsApplication1
                 if (listaInvitaciones[j].id == id_invitacion)
                     listaInvitaciones.RemoveAt(j);
 
-            DelegadoParaActualizarInvitaciones delegado = new DelegadoParaActualizarInvitaciones(ActualizaListaInvitaciones);
-            Invitacion_Grid.Invoke(delegado);
-        }
-
-        private void ActualizaListaInvitaciones()
-        {
             this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
             this.Invitacion_Grid.ColumnCount = 3;
 
-            for (int j = 0; j < listaInvitaciones.Count; j++)
+            for ( j = 0; j < listaInvitaciones.Count; j++)
             {
                 this.Invitacion_Grid.Rows[j].Cells[0].Value = listaInvitaciones[j].id;
                 this.Invitacion_Grid.Rows[j].Cells[1].Value = listaInvitaciones[j].rival;
@@ -219,9 +221,12 @@ namespace WindowsFormsApplication1
             }
         }
 
-        delegate void DelegadoParaPonerUsuario();
+       delegate void DelegadoParaPonerUsuario();
 
         private void PonUsuario()
+            //actualizamos el label del usuario (indicamos su numbre y su id)
+            //si se ha iniciado sesión correctamente
+            //ponemos visibles e invisibles los elementos del form1 necesarios
         {
             this.Usuario_lbl.Text = "Usuario: " + nombre + "\n ID: " + ID_jugador;
             this.groupBox_inciar.Visible = false;
@@ -237,6 +242,7 @@ namespace WindowsFormsApplication1
         }
 
         private void AtenderServidor()
+            //el cliente recibe los mensajes del servidor y los procesa según el código
         {
             while (true)
             {
@@ -259,7 +265,6 @@ namespace WindowsFormsApplication1
                         else
                         {
                             ID_jugador = Convert.ToInt32(mensaje);
-                           // MessageBox.Show("Se ha iniciado sesión correctamente, tu ID de jugador es: " + mensaje);
                             DelegadoParaPonerUsuario d = new DelegadoParaPonerUsuario(PonUsuario);
                             Usuario_lbl.Invoke(d);
                         }
@@ -284,43 +289,31 @@ namespace WindowsFormsApplication1
                         f2[nform].TomaRespuesta(trozos);
                         break;
 
-                    case 4:
+                    case 4: //qué personajes se han escogido
                         nform = Convert.ToInt32(trozos[1]);
                         f2[nform].TomaRespuesta(trozos);
                         break;
 
-                    case 5:
+                    case 5: //cuantas partidas ha jugado un jugador
                         nform = Convert.ToInt32(trozos[1]);
                         f2[nform].TomaRespuesta(trozos);
                         break;
 
-                    case 6:
+                    case 6: //notificación para actualizar la lista de conectados
                         DelegadoParaActualizarLista delegado_conectados = new DelegadoParaActualizarLista(Actualiza_Grid_Conectados);
                         Conectados_Grid.Invoke(delegado_conectados, new object[] { trozos });
                         break;
-                    case 7:
-                        
+                    case 7: //al cliente le llega una nueva invitación
                         DelegadoParaActualizarLista delegado_invitaciones = new DelegadoParaActualizarLista(NuevaInvitacion);
-
                         Invoke(delegado_invitaciones, new object[] { trozos });
                         break;
-                    case 8:
+                    case 8: // al cliente le llega información sobre una invitación 
                         DelegadoParaActualizarLista delegado_invitaciones_respuesta = new DelegadoParaActualizarLista(RespuestaInvitacion);
                         Invoke(delegado_invitaciones_respuesta, new object[] { trozos });
                         break;
-                    case 9:
+                    case 9: //mensaje por el chat
+                            //9/id de la partida/mensaje
                         ID_partida = Convert.ToInt32(trozos[1]);
-                        
-                        nform=-1;
-                        for (int i = 0; i < listaPartidas.Count; i++)
-                            if (listaPartidas[i].ID == ID_partida)
-                                nform = listaPartidas[i].nForm;
-
-                        f3[nform].TomaRespuesta(trozos);
-                        break;
-                    case 10:
-                        ID_partida = Convert.ToInt32(trozos[1]);
-                        
                         nform=-1;
                         for (int i = 0; i < listaPartidas.Count; i++)
                             if (listaPartidas[i].ID == ID_partida)
@@ -338,7 +331,7 @@ namespace WindowsFormsApplication1
 
                         f3[nform].TomaRespuesta(trozos);
                         break;
-                    case 12:
+                    case 12: //alguien intenta adivinar un personaje
                         ID_partida = Convert.ToInt32(trozos[1]);
                         
                         nform=-1;
@@ -348,15 +341,15 @@ namespace WindowsFormsApplication1
 
                         f3[nform].TomaRespuesta(trozos);
                         break;
-                    case 13:
+                    case 13: //consulta los resultados del usuario con otro jugador
                         nform = Convert.ToInt32(trozos[1]);
                         f2[nform].TomaRespuesta(trozos);
                         break;
-                    case 14:
+                    case 14: //lista de partidas en un tiempo determinado
                         nform = Convert.ToInt32(trozos[1]);
                         f2[nform].TomaRespuesta(trozos);
                         break;
-                    case 15:
+                    case 15: //un jugador se ha desconectado de la partida
                         ID_partida = Convert.ToInt32(trozos[1]);
                         
                         nform=-1;
@@ -366,7 +359,7 @@ namespace WindowsFormsApplication1
 
                         f3[nform].TomaRespuesta(trozos);
                         break;
-                    case 16:
+                    case 16: //darse de baja
                         int respuesta = Convert.ToInt32(trozos[1]);
                         if (respuesta == 1)
                             MessageBox.Show("Tu usuario se ha eliminado correctamente");
@@ -378,6 +371,7 @@ namespace WindowsFormsApplication1
         }
 
         private void QuererConsulta_Click(object sender, EventArgs e)
+            //creamos el thread para poder hacer consultas
         {
             ThreadStart ts = delegate { PonerEnMarchaFormulario2(); };
             Thread T = new Thread(ts);
@@ -385,7 +379,7 @@ namespace WindowsFormsApplication1
         }
 
         public void Actualiza_Grid_Conectados(string[] trozos)
-        // actualiza la lista de conectados cada vez que se conecte un usuario
+            //actualiza la lista de conectados cada vez que se conecte un usuario
         {
             int num_conectados = Convert.ToInt32(trozos[1]);
             string mensaje = trozos[2].Split('\0')[0];
@@ -400,6 +394,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Invitar_Click(object sender, EventArgs e)
+            //enviamos el mensaje al servidor indicando que queremos hacer una nueva invitación
         {
             string msj=null;
             string rival = null;
@@ -459,6 +454,8 @@ namespace WindowsFormsApplication1
         }
 
         private void Desconectar_Click(object sender, EventArgs e)
+            //enviamos un mensaje al servidor para que cierre la conexión
+            //y nos desconectamos
         {
             string msj = "0/";
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(msj);
@@ -492,6 +489,7 @@ namespace WindowsFormsApplication1
         }
 
         private void aceptar_button_Click(object sender, EventArgs e)
+            //enviamos un mensaje al servidor indicando que aceptamos la invitación
         {
             string msj=null;
             string id=null;
@@ -513,6 +511,8 @@ namespace WindowsFormsApplication1
         }
 
         private void rechazar_button_Click(object sender, EventArgs e)
+            //enviamos un mensaje al servidor indicando que rechazamos la invitación
+            //y la eliminamos de la lista de invitaciones
         {
             string msj = null;
             string id = null;
@@ -551,7 +551,7 @@ namespace WindowsFormsApplication1
         }
 
         private void NuevaInvitacion(string [] trozos)
-        //Cuando te invitan a una partida
+            //Añade una nueva invitación a la lista de invitaciones cuando te invitan a una partida
         {
             int codigo = Convert.ToInt16(trozos[0]);
             string rival;
@@ -599,6 +599,7 @@ namespace WindowsFormsApplication1
         }
 
         private void RespuestaInvitacion(string[] trozos)
+            //Actualiza el estado de una invitación cuando responde un jugador
         {
             ID_partida = Convert.ToInt32(trozos[1]);
             int id_invitacion = Convert.ToInt32(trozos[2].Split('\0')[0]);
@@ -667,6 +668,7 @@ namespace WindowsFormsApplication1
         }
 
         private void IniciarPartida_Click(object sender, EventArgs e)
+            //Creamos el thread para poner en marcha una nueva partida
         {
                 ThreadStart ts = delegate { PonerEnMarchaFormulario3(); };
                 Thread T = new Thread(ts);
@@ -676,6 +678,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Conectados_Grid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+            //Se añade el jugador seleccionado a la lista de jugadores a los que se quiere invitar a una partida
         {
             int fila = e.RowIndex;
             
@@ -690,6 +693,8 @@ namespace WindowsFormsApplication1
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+            //Cuando el cliente cierra la ventana envía al servidor un mensaje para indicar que cierre la conexión
+            //y nos desconectamos
         {
             if (conectado == 1)
             {
@@ -717,6 +722,8 @@ namespace WindowsFormsApplication1
         }
 
         private void Baja_button_Click(object sender, EventArgs e)
+            //coge el el nombre y contraseña introducidos por el cliente
+            // y lo envia al servidor para dar de baja
         {
             if (conectado == 0)
             {
@@ -754,6 +761,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Invitacion_Grid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+            //Selecciona la invitación que se quiere aceptar, rechazar o iniciar partida
         {
             int fila = e.RowIndex;
             this.Invitacion_textBox.Text = listaInvitaciones[fila].id;
@@ -761,6 +769,8 @@ namespace WindowsFormsApplication1
         }
 
         private void timer_invitar_Tick(object sender, EventArgs e)
+            //Cuenta los segundos que pasan desde que te llega una invitación
+            //si pasan mas de 60, se rechaza la invitación automáticamente
         {
             for (int i = 0; i < listaInvitaciones.Count; i++)
             {
@@ -787,6 +797,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Ayuda_Click(object sender, EventArgs e)
+            //Se abre el form4
         {
             Form4 f4 = new Form4();
             f4.ShowDialog();

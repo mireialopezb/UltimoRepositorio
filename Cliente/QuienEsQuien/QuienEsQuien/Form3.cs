@@ -145,6 +145,7 @@ namespace WindowsFormsApplication1
         }
 
         public void TomaRespuesta(string[] trozos)
+            //Procesamos los mensajes del servidor según su código
         {
             int codigo = Convert.ToInt32(trozos[0]);
             string mensaje = null;
@@ -154,22 +155,21 @@ namespace WindowsFormsApplication1
             
             switch (codigo)
             {
-                case 9:
+                case 9: 
+                    //mensjaje del chat
                     mensaje = trozos[2].Split('\0')[0];
                     Chat_listBox.Invoke(delegado, new object[] { mensaje });
                     break;
 
-                case 10:
-                    break;
-
-                case 11:
+                case 11: //no hace nada
                     break;
 
                 case 12:
+                    //Alguien ha intentado responder
                     mensaje=trozos[2].Split('\0')[0];
                     switch (Convert.ToInt32(mensaje))
                     {
-                        case 0:
+                        case 0: 
                             MessageBox.Show("Has fallado. Pierdes");
                             Cerrar = 1;
                             //this.Invoke(d);
@@ -202,7 +202,7 @@ namespace WindowsFormsApplication1
                     }
                     break;
 
-                case 15:
+                case 15: //algun jugador ha abandonado la partida
                     MessageBox.Show(trozos[2].Split('\0')[0] + " ha abandonado la partida.");
                     break;
             }
@@ -214,6 +214,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Enviar_Click(object sender, EventArgs e)
+            //Enviamos un mensaje por el chat, y lo añadimos también al del usuario
         {
             string msj = "9/" + ID_partida + "/" + nombre + ": " + this.Chat_TextBox.Text;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(msj);
@@ -232,6 +233,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Seleccionar_button_Click(object sender, EventArgs e)
+            //Enviamos al servidor el personaje seleccionado
         {
             if (this.personaje_seleccionado == 0)
                 MessageBox.Show("Debes seleccionar primero tu personaje");
@@ -246,6 +248,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Confirmar_Click(object sender, EventArgs e)
+            //Enviamos al servidor el personaje y el rival que se quiere adivinar
         {
             if (personaje_resolver == 0)
                 MessageBox.Show("Debes seleccionar un personaje antes de resolver");
@@ -281,12 +284,14 @@ namespace WindowsFormsApplication1
         }
 
         private void timer_Tick(object sender, EventArgs e)
+            //Guardamos la duración de la partida
         {
             duracion++;
             Duracion_label.Text = duracion.ToString();
         }
 
         private void jugador_personaje_grid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+            //Se guarda el nombre del rival del que se quiere adivinar el personaje
         {
             int fila = e.RowIndex;
             nombre_rival= rivales[fila];
@@ -295,6 +300,7 @@ namespace WindowsFormsApplication1
         }
 
         private void Form3_FormClosing(object sender, FormClosingEventArgs e)
+            //Enviamos un mensaje al servidor indicando que el jugador ha abandonado la partida
         {
             if (Cerrar == 0)
             {

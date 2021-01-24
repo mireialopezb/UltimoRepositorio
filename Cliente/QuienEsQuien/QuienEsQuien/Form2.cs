@@ -29,8 +29,10 @@ namespace WindowsFormsApplication1
         }
 
         private void Consulta_Button_Click_1(object sender, EventArgs e)
+            //Se envía al servidor la petición de hacer una consulta con sus códigos correspondientes
+            //y toda la información necesaria
         {
-            if (Record.Checked)
+            if (Record.Checked) 
             {
                 string mensaje = "3/" + nForm;
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
@@ -101,6 +103,7 @@ namespace WindowsFormsApplication1
         }
 
         public void TomaRespuesta(string [] trozos)
+            //Procesamos las respuestas del servidor a las consultas según su código
         {
             int codigo = Convert.ToInt32(trozos[0]);
             string mensaje=null;
@@ -113,20 +116,25 @@ namespace WindowsFormsApplication1
 
             switch (codigo)
             {
-                case 3:// codigo/nform/personaje1/personaje2
+                case 3: 
+                    //codigo/nform/mensaje
                     mensaje = trozos[2].Split('\0')[0]; 
                     Mensaje_label.Invoke(delegado, new object[] { mensaje });
                     break;
                 case 4:
+                    //codigo/nform/num de personajes/personaje1/personaje2
                     Consulta_Grid.Invoke(delegado_consultas_caso4, new object[] { trozos });
                     break;
                 case 5:
+                    //codigo/nform/num partidas/id partida-nombre del rival-resultado
                     Consulta_Grid.Invoke(delegado_consultas_caso5, new object[] { trozos });
                     break;
                 case 13:
+                    //codigo/nform/num partidas/id partida-jugadores-ganador/id partida-...
                     Consulta_Grid.Invoke(delegado_consultas_caso13, new object[] { trozos });
                     break;
                 case 14:
+                    //codigo/nform/num partidas/id partida-resultado/id partida-...
                     Consulta_Grid.Invoke(delegado_consultas_caso14, new object[] { trozos });
                     break;
             }
@@ -139,7 +147,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonLista1(string[] trozos)
-        //codigo/num from/num partidas/id partida-nombre del rival-resultado
+        //codigo/nform/num partidas/id partida-nombre del rival-resultado
         {
             // El numero de partidas está en el trozo 1
             int n = Convert.ToInt32(trozos[2]);
@@ -170,7 +178,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonLista2(string[] trozos)
-        //codigo/num form/num partidas/id partida-jugadores-ganador/id partida...
+        //codigo/nform/num partidas/id partida-jugadores-ganador/id partida...
         {
             // El numero de partidas está en el trozo 1
             int n = Convert.ToInt32(trozos[2]);
@@ -195,7 +203,7 @@ namespace WindowsFormsApplication1
         }
 
         private void PonLista4(string[] trozos)
-        //codigo/num form/num personajes/lista
+        //codigo/nform/num personajes/lista
         {
             int n = Convert.ToInt32(trozos[2]);
             if (n == 0)
@@ -219,6 +227,7 @@ namespace WindowsFormsApplication1
             }
             this.Consulta_Grid.Visible = true;
         }
+        
         private void Form2_Load(object sender, EventArgs e)
         {
             this.Mensaje_label.Text = null;
