@@ -41,7 +41,7 @@ namespace WindowsFormsApplication1
 
             else if (Personajes.Checked)
             {
-                if (this.ID_Partida.Text == null)
+                if (this.ID_Partida.Text == "")
                     MessageBox.Show("Debes indicar la partida que quieres consultar");
                 else
                 {
@@ -49,25 +49,25 @@ namespace WindowsFormsApplication1
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
                 }
-                this.ID_Partida.Text = null;
+                this.ID_Partida.Text = "";
             }
 
             else if (Partidas.Checked)
             {
-                if (this.ID_Jugador.Text == null)
-                    MessageBox.Show("Debes indicar el jugador sobre el que quieres hacer la consulta)");
+                if (this.ID_Jugador.Text == "")
+                    MessageBox.Show("Debes indicar el jugador sobre el que quieres hacer la consulta");
                 else
                 {
                     string mensaje = "5/" + nForm + "/" + this.ID_Jugador.Text;
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
                 }
-                this.ID_Jugador.Text = null;
+                this.ID_Jugador.Text = "";
             }
 
             else if (Resultados.Checked)
             {
-                if (this.ID_jugador_2.Text == null)
+                if (this.ID_jugador_2.Text == "")
                     MessageBox.Show("Debes indicar el jugador sobre el que quieres hacer la consulta");
                 else
                 {
@@ -80,12 +80,12 @@ namespace WindowsFormsApplication1
                         server.Send(msg);
                     }
                 }
-                this.ID_jugador_2.Text = null;
+                this.ID_jugador_2.Text = "";
             }
 
             else if (Tiempo.Checked)
             {
-                if ((this.Fecha_Inicio.Text == null) || (this.Fecha_Final.Text == null))
+                if ((this.Fecha_Inicio.Text == "") || (this.Fecha_Final.Text == ""))
                     MessageBox.Show("Asegurate de rellenar bien todos los campos");
                 else
                 {
@@ -93,9 +93,8 @@ namespace WindowsFormsApplication1
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
                 }
-                this.Fecha_Inicio.Text = null;
-                this.Fecha_Final.Text = null;
-                
+                this.Fecha_Inicio.Text = "";
+                this.Fecha_Final.Text = "";                
             }
 
             else
@@ -230,7 +229,12 @@ namespace WindowsFormsApplication1
         
         private void Form2_Load(object sender, EventArgs e)
         {
-            this.Mensaje_label.Text = null;
+            this.Mensaje_label.Text = "";
+            this.Fecha_Inicio.Text = "";
+            this.Fecha_Final.Text = "";
+            this.ID_jugador_2.Text = "";
+            this.ID_Jugador.Text = "";
+            this.ID_Partida.Text = "";
         }
 
         private void PonLista3(string[] trozos)

@@ -252,29 +252,33 @@ namespace WindowsFormsApplication1
         {
             if (personaje_resolver == 0)
                 MessageBox.Show("Debes seleccionar un personaje antes de resolver");
-            else if (personaje_textBox == null)
+            else if (personaje_textBox.Text == "")
                 MessageBox.Show("Debes indicar de quien crees que es ese personaje");
             else
             {
-                int encontrado=0;
+                
                 if (nombre_rival == nombre)
                 {
                   MessageBox.Show("No te puedes elegir a ti mismo");
-                  encontrado = 1;
+                  
                 }
 
                 else
                 {
-                   string mensaje = "12/" + ID_partida + "/" + nombre_rival + "/" + personaje_resolver;
-                   byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                   server.Send(msg);
-                  encontrado = 1;
+                    if (nombre_rival == "")
+                        MessageBox.Show("Debes seleccionar el rival del que quieres adivinar el personaje");
+                    else
+                    {
+                        string mensaje = "12/" + ID_partida + "/" + nombre_rival + "/" + personaje_resolver;
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                        server.Send(msg);
+                        
+                    }
                 }
 
-                if (encontrado == 0)
-                    MessageBox.Show("No has escrito bien el nombre de tu rival");
             }
             this.personaje_textBox.Text = null;
+            this.nombre_rival = "";
         }
 
         private void Atras_Click(object sender, EventArgs e)

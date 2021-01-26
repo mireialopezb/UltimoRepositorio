@@ -374,6 +374,7 @@
             // timer_invitar
             // 
             this.timer_invitar.Interval = 1000;
+            this.timer_invitar.Tick += new System.EventHandler(this.timer_invitar_Tick_1);
             // 
             // Invitacion_Grid
             // 

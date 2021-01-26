@@ -29,8 +29,8 @@ namespace WindowsFormsApplication1
         delegate void DelegadoParaPasarMensaje(string mensaje);
         delegate void DelegadoParaActualizarLista(string[] trozos);
         delegate void DelegadoParaActualizarInvitaciones();
-        
-        int port = 9091;
+
+        int port = 9090;
         string ip = "192.168.1.50";
         List<string> jugadores_dosCdos = new List<string>();
         string[] conectados;
@@ -117,7 +117,7 @@ namespace WindowsFormsApplication1
             }
 
             this.Nombre.Text = null;
-            this.Contraseña = null;
+            this.Contraseña.Text = null;
 
         }
 
@@ -158,7 +158,7 @@ namespace WindowsFormsApplication1
             }
 
             this.Nombre.Text = null;
-            this.Contraseña = null;
+            this.Contraseña.Text = null;
         }
 
         private void PonerEnMarchaFormulario2()
@@ -184,44 +184,53 @@ namespace WindowsFormsApplication1
             }
             else
             {
-                int encontrado = 0;
-                while ((encontrado == 0) && (j < listaPartidas.Count))
+                int encontrado = -1;
+                while (j < listaPartidas.Count)
                 {
                     if (listaPartidas[j].id_invitacion == id_invitacion)
                     {
-                        encontrado = 1;
+                        encontrado = j;
                     }
-                    else
-                        j++;
+                    
+                    j++;
                 }
 
-                int cont = f3.Count;
+                if (encontrado != -1)
+                {
+                    int cont = f3.Count;
 
-                Form3 f = new Form3(cont, listaPartidas[j].ID, this.nombre, server, listaPartidas[j].num, listaPartidas[j].rivales);
+                    Form3 f = new Form3(cont, listaPartidas[encontrado].ID, this.nombre, server, listaPartidas[encontrado].num, listaPartidas[encontrado].rivales);
 
-                listaPartidas[j].nForm = cont;
+                    listaPartidas[encontrado].nForm = cont;
 
-                f3.Add(f);
-                f.ShowDialog();
-
+                    f3.Add(f);
+                    f.ShowDialog(); 
+                }
             }
 
-            for (j = 0; j < listaInvitaciones.Count; j++)
-                if (listaInvitaciones[j].id == id_invitacion)
-                    listaInvitaciones.RemoveAt(j);
+           // for (j = 0; j < listaInvitaciones.Count; j++)
+             //   if (listaInvitaciones[j].id == id_invitacion)
+                    //listaInvitaciones.RemoveAt(j);
+            
+            DelegadoParaActualizarInvitaciones delegado = new DelegadoParaActualizarInvitaciones(ActualizaInvitaciones);
+            Invitacion_Grid.Invoke(delegado);
 
-            this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
-            this.Invitacion_Grid.ColumnCount = 3;
-
-            for ( j = 0; j < listaInvitaciones.Count; j++)
-            {
-                this.Invitacion_Grid.Rows[j].Cells[0].Value = listaInvitaciones[j].id;
-                this.Invitacion_Grid.Rows[j].Cells[1].Value = listaInvitaciones[j].rival;
-                this.Invitacion_Grid.Rows[j].Cells[2].Value = listaInvitaciones[j].estado;
-            }
         }
 
        delegate void DelegadoParaPonerUsuario();
+
+       private void ActualizaInvitaciones()
+       {
+           this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
+           this.Invitacion_Grid.ColumnCount = 3;
+
+           for (int j = 0; j < listaInvitaciones.Count; j++)
+           {
+               this.Invitacion_Grid.Rows[j].Cells[0].Value = listaInvitaciones[j].id;
+               this.Invitacion_Grid.Rows[j].Cells[1].Value = listaInvitaciones[j].rival;
+               this.Invitacion_Grid.Rows[j].Cells[2].Value = listaInvitaciones[j].estado;
+           }
+       }
 
         private void PonUsuario()
             //actualizamos el label del usuario (indicamos su numbre y su id)
@@ -319,7 +328,8 @@ namespace WindowsFormsApplication1
                             if (listaPartidas[i].ID == ID_partida)
                                 nform = listaPartidas[i].nForm;
 
-                        f3[nform].TomaRespuesta(trozos);
+                        if (nform != -1)
+                            f3[nform].TomaRespuesta(trozos);
                         break;
                     case 11:
                         ID_partida = Convert.ToInt32(trozos[1]);
@@ -329,7 +339,8 @@ namespace WindowsFormsApplication1
                             if (listaPartidas[i].ID == ID_partida)
                                 nform = listaPartidas[i].nForm;
 
-                        f3[nform].TomaRespuesta(trozos);
+                        if (nform != -1)
+                            f3[nform].TomaRespuesta(trozos);
                         break;
                     case 12: //alguien intenta adivinar un personaje
                         ID_partida = Convert.ToInt32(trozos[1]);
@@ -338,8 +349,8 @@ namespace WindowsFormsApplication1
                         for (int i = 0; i < listaPartidas.Count; i++)
                             if (listaPartidas[i].ID == ID_partida)
                                 nform = listaPartidas[i].nForm;
-
-                        f3[nform].TomaRespuesta(trozos);
+                        if(nform!=-1)
+                            f3[nform].TomaRespuesta(trozos);
                         break;
                     case 13: //consulta los resultados del usuario con otro jugador
                         nform = Convert.ToInt32(trozos[1]);
@@ -357,7 +368,8 @@ namespace WindowsFormsApplication1
                             if (listaPartidas[i].ID == ID_partida)
                                 nform = listaPartidas[i].nForm;
 
-                        f3[nform].TomaRespuesta(trozos);
+                        if (nform != -1)
+                            f3[nform].TomaRespuesta(trozos);
                         break;
                     case 16: //darse de baja
                         int respuesta = Convert.ToInt32(trozos[1]);
@@ -436,6 +448,7 @@ namespace WindowsFormsApplication1
             for (int n = 0; n < cont; n++)
                 rivales[n] = null;
             cont = 0;
+            this.Invitados_textBox.Text = null;
             
         }
 
@@ -497,7 +510,15 @@ namespace WindowsFormsApplication1
             for (int j = 0; j < listaInvitaciones.Count; j++)
             {
                 if (listaInvitaciones[j].id == this.Invitacion_textBox.Text)
-                    id = this.Invitacion_textBox.Text;
+                    if (listaInvitaciones[j].remitente == 1)
+                    {
+                        id = this.Invitacion_textBox.Text;
+                        listaInvitaciones[j].remitente = 2;
+                    }
+                    else if (listaInvitaciones[j].remitente == 0)
+                        MessageBox.Show("No puedes aceptar tu propia invitación");
+                    else
+                        MessageBox.Show("Ya has aceptado esta invitación");
             }
 
             if (id != null)
@@ -533,10 +554,10 @@ namespace WindowsFormsApplication1
             
             this.Iniciar_Button.Visible = true;
             this.Invitacion_textBox.Text = null;
-
+            /*
             for (int j = 0; j < listaInvitaciones.Count; j++)
                 if (listaInvitaciones[j].id == id)
-                    listaInvitaciones.RemoveAt(j);
+                    listaInvitaciones.RemoveAt(j);*/
 
 
             this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
@@ -615,21 +636,28 @@ namespace WindowsFormsApplication1
             {
                 int encontrado = 0;
                 for (int j = 0; j < listaInvitaciones.Count; j++)
+                {
                     if (listaInvitaciones[j].id == trozos[2])
                     {
-                        encontrado = 1;
-                        listaInvitaciones[j].estado = "Faltan " + trozos[3].Split('\0')[0] + " personas por aceptar";
+                        if (listaInvitaciones[j].remitente == 1)
+                            encontrado = 1;
+                        else
+                        {
+                            encontrado = 1;
+                            listaInvitaciones[j].estado = "Pendiente de respuesta";
+                        }
                     }
+                }
                 if (encontrado == 0)
                 {
                     CInvitacion a = new CInvitacion();
 
-                    string estado = "Faltan " + trozos[3] + " personas por aceptar de " + trozos[4];
+                    string estado = "Pendiente de respuesta";
                     a.rival = trozos[5].Split('\0')[0];
                     a.estado = estado;
                     a.id = trozos[2];
                     a.tiempo = 61;
-                    a.remitente = 1; //te han invitado
+                    a.remitente = 0; //tu invitas
 
                     listaInvitaciones.Add(a);
                 }
@@ -646,6 +674,7 @@ namespace WindowsFormsApplication1
                     partida.rivales[j] = trozos[4 + j].Split('\0')[0];
                 
                 listaPartidas.Add(partida);
+
                 string estado = "Invitación aceptada";
                 for (int j = 0; j < listaInvitaciones.Count; j++)
                     if (listaInvitaciones[j].id == trozos[2].Split('\0')[0])
@@ -663,7 +692,7 @@ namespace WindowsFormsApplication1
                 this.Invitacion_Grid.Rows[j].Cells[2].Value = listaInvitaciones[j].estado;
             }
 
-            if (listaInvitaciones.Count == 0)
+            if (listaInvitaciones.Count == 1)
                 this.timer_invitar.Enabled = false;
         }
 
@@ -757,7 +786,7 @@ namespace WindowsFormsApplication1
             }
 
             this.Nombre.Text = null;
-            this.Contraseña = null;
+            this.Contraseña.Text = null;
         }
 
         private void Invitacion_Grid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -768,7 +797,14 @@ namespace WindowsFormsApplication1
             id_invitacion = listaInvitaciones[fila].id;
         }
 
-        private void timer_invitar_Tick(object sender, EventArgs e)
+        private void Ayuda_Click(object sender, EventArgs e)
+            //Se abre el form4
+        {
+            Form4 f4 = new Form4();
+            f4.ShowDialog();
+        }
+
+        private void timer_invitar_Tick_1(object sender, EventArgs e)
             //Cuenta los segundos que pasan desde que te llega una invitación
             //si pasan mas de 60, se rechaza la invitación automáticamente
         {
@@ -776,31 +812,25 @@ namespace WindowsFormsApplication1
             {
                listaInvitaciones[i].tiempo++;
 
-                if ( listaInvitaciones[i].tiempo == 60)
+                if ( listaInvitaciones[i].tiempo == 10)
                 {
                     string msj = "8/" + listaInvitaciones[i].id + "/0";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(msj);
                     server.Send(msg);
+                    MessageBox.Show("Se ha cancelado la invitacion " + listaInvitaciones[i].id);
                     listaInvitaciones.RemoveAt(i);
-
-                    this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
-                    this.Invitacion_Grid.ColumnCount = 3;
-
-                    for (int j = 0; j < listaInvitaciones.Count; j++)
-                    {
-                        this.Invitacion_Grid.Rows[j].Cells[0].Value = listaInvitaciones[j].id;
-                        this.Invitacion_Grid.Rows[j].Cells[1].Value = listaInvitaciones[j].rival;
-                        this.Invitacion_Grid.Rows[j].Cells[2].Value = listaInvitaciones[j].estado;
-                    }
                 }
             }
-        }
 
-        private void Ayuda_Click(object sender, EventArgs e)
-            //Se abre el form4
-        {
-            Form4 f4 = new Form4();
-            f4.ShowDialog();
+            this.Invitacion_Grid.RowCount = listaInvitaciones.Count;
+            this.Invitacion_Grid.ColumnCount = 3;
+
+            for (int j = 0; j < listaInvitaciones.Count; j++)
+            {
+                this.Invitacion_Grid.Rows[j].Cells[0].Value = listaInvitaciones[j].id;
+                this.Invitacion_Grid.Rows[j].Cells[1].Value = listaInvitaciones[j].rival;
+                this.Invitacion_Grid.Rows[j].Cells[2].Value = listaInvitaciones[j].estado;
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <pthread.h>
 #include <string.h>
-#define port 9091
+#define port 9090
 #define MAX 100
 #define MAX_jugadores 4
 //preferencias -std=c99 `mysql_config --cflags --libs`
@@ -18,6 +18,7 @@
 int num_sockets;
 int j;
 int sockets[MAX];
+int id_invitaciones;
 //Estructura necesaria para acceso excluyente
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -427,7 +428,7 @@ int IniciarPartida(MYSQL *conn, ListaPartidas *lista)
 	if(lista->num==0)
 	{
 		char consulta [200];
-		strcpy (consulta,"SELECT COUNT(*) FROM partida");
+		strcpy (consulta,"SELECT MAX(ID_partida) FROM partida");
 		
 		int err=mysql_query (conn, consulta);
 		if (err!=0) 
@@ -611,7 +612,7 @@ int PonPartida (ListaPartidas *listaPartidas, ListaConectados *listaConectados, 
 	//añade la partida que se acaba de iniciar a la lista de partidas
 {
 	int ID=IniciarPartida(conn,listaPartidas);
-	
+	printf ("id partida: %d\n",ID);
 	for(int n=0;n<listaInvitaciones->num;n++)
 	{
 		if(id==listaInvitaciones->invitaciones[n].id)
@@ -629,6 +630,9 @@ int PonPartida (ListaPartidas *listaPartidas, ListaConectados *listaConectados, 
 			listaPartidas->partida[listaPartidas->num].partida=ID;
 			listaPartidas->partida[listaPartidas->num].num_jugadores=listaInvitaciones->invitaciones[n].invitaciones;
 			listaPartidas->partida[listaPartidas->num].fallos=0;
+			
+			printf ("id partida: %d\n",listaPartidas->partida[listaPartidas->num].partida);
+			
 			listaPartidas->num++;
 		}
 	}
@@ -638,20 +642,16 @@ int PonPartida (ListaPartidas *listaPartidas, ListaConectados *listaConectados, 
 int PonInvitacion(ListaInvitaciones *lista,char nombre[20],int invitaciones)
 	//la persona que invita a los otros jugadores crea la invitacion y la anade a la lista de invitaciones
 {
-	int id=0;
-	if(lista->num==0)
-		id= 1;
-	else
-		id= lista->invitaciones[lista->num-1].id+1;
+	id_invitaciones++;
 	
 	lista->invitaciones[lista->num].aceptadas=1;
 	lista->invitaciones[lista->num].invitaciones=invitaciones+1;
 	strcpy(lista->invitaciones[lista->num].jugadores[0].jugador,nombre);
-	lista->invitaciones[lista->num].id=id;
+	lista->invitaciones[lista->num].id=id_invitaciones;
 	
 	lista->num++;
 	
-	return id;	
+	return id_invitaciones;	
 }
 
 int GuardarPersonaje (ListaPartidas *lista, char nombre[20],int id, int id_personaje,int socket)
@@ -688,6 +688,8 @@ void AdivinarPersonaje (ListaPartidas *lista, char nombre[20],char nombre_adivin
 	{
 		if (lista->partida[j].partida==id)
 		{
+			printf("id partida lista: %d, id: %d\n",lista->partida[j].partida,id);
+			
 			for(int n=0;n<lista->partida[j].num_jugadores;n++)
 			{
 				if(strcmp(lista->partida[j].jugadores[n].jugador,nombre_adivinar)==0)
@@ -762,9 +764,13 @@ void GuardarPartida (ListaPartidas *lista, MYSQL *conn, char nombre [20], int id
 	{
 		if (lista->partida[j].partida==id)
 		{
+			printf("lista partidas id: %d, id: %d \n",lista->partida[j].partida,id);
+			
 			for(int n=0;n<lista->partida[j].num_jugadores;n++)
 			{
+				
 				sprintf (consulta,"SELECT ID_jugador FROM jugador WHERE nombre = '%s';",lista->partida[j].jugadores[n].jugador);
+				printf("consutlta %s\n",consulta);
 				
 				err=mysql_query (conn, consulta);
 				if (err!=0) {
@@ -784,6 +790,8 @@ void GuardarPartida (ListaPartidas *lista, MYSQL *conn, char nombre [20], int id
 					id_jugador=atoi(row[0]);
 				
 				sprintf(consulta, "INSERT INTO registro VALUES (%d,%d,%d);",id,id_jugador,lista->partida[j].jugadores[n].personaje);
+				printf("consutlta %s\n",consulta);
+				
 				err = mysql_query(conn, consulta);
 				if (err!=0) 
 					printf ("Error al introducir datos la base %u %s\n", 
@@ -873,7 +881,8 @@ void DamePartidasFecha (MYSQL *conn,char fechamin [11], char fechamax [11], int 
 	MYSQL_RES *resultado;
 	char consulta [500];
 	
-	sprintf(consulta,"SELECT registro.ID_partida, jugador.nombre, registro.ID_jugador, partida.ID_ganador, partida.num_jugadores FROM (registro,jugador,partida) WHERE partida.ID_partida BETWEEN (SELECT partida.ID_partida FROM partida WHERE partida.fecha = '%s') AND (SELECT partida.ID_partida FROM partida WHERE partida.fecha = '%s') AND partida.ID_partida = registro.ID_partida AND registro.ID_jugador=jugador.ID_jugador;",fechamin,fechamax);
+	sprintf(consulta,"SELECT registro.ID_partida, jugador.nombre, registro.ID_jugador, partida.ID_ganador, partida.num_jugadores FROM (registro,jugador,partida) WHERE partida.ID_partida BETWEEN (SELECT partida.ID_partida FROM partida WHERE partida.ID_partida = (SELECT MIN(ID_partida) FROM partida WHERE partida.fecha = '%s') ) AND (SELECT partida.ID_partida FROM partida  WHERE partida.ID_partida = (SELECT MAX(ID_partida) FROM partida WHERE partida.fecha = '%s')) AND partida.ID_partida = registro.ID_partida AND registro.ID_jugador=jugador.ID_jugador;",fechamin,fechamax);
+	
 	
 	int err=mysql_query (conn, consulta);
 	
@@ -928,20 +937,26 @@ int GuardarInvitacionAceptada(ListaInvitaciones *lista, int id, char nombre [20]
 	//y devuelve 0 si todos los jugadores han aceptado la invitacion o el numero de
 	//jugadores que faltan por aceptar la invitacion
 {
+	
+	printf("nombre del que acepta %s \n",nombre);
 	for(int j=0;j<lista->num;j++)
-		if(lista->invitaciones[j].id=id)
+		if(lista->invitaciones[j].id==id)
 	{
 			strcpy(lista->invitaciones[j].jugadores[lista->invitaciones[j].aceptadas].jugador,nombre);
+			for (int n=0;n<lista->invitaciones[j].aceptadas;n++)
+				printf ("id %d, num %d, jugador %s\n",lista->invitaciones[j].id,lista->invitaciones[j].invitaciones,lista->invitaciones[j].jugadores[n].jugador);
+			
+			lista->invitaciones[j].aceptadas++;
+			printf("acpetadas %d\n",lista->invitaciones[j].aceptadas);
+			
+			if(lista->invitaciones[j].aceptadas==lista->invitaciones[j].invitaciones)
+				//todos los jugadores han aceptado la Invitacion
+				return 0;
+			else
+				//devolvemos el numero de invitaciones pendientes de respuesta
+				return lista->invitaciones[j].invitaciones-lista->invitaciones[j].aceptadas;
 	}
 	
-	lista->invitaciones[j].aceptadas++;
-	
-	if(lista->invitaciones[j].aceptadas==lista->invitaciones[j].invitaciones)
-		//todos los jugadores han aceptado la Invitacion
-		return 0;
-	else
-		//devolvemos el numero de invitaciones pendientes de respuesta
-		return lista->invitaciones[j].invitaciones-lista->invitaciones[j].aceptadas;
 }
 void *AtenderCliente( void *socket)
 {
@@ -1141,6 +1156,8 @@ void *AtenderCliente( void *socket)
 				char lista[100];
 				int sockets[MAX_jugadores];
 				
+				strcpy(lista,"");
+				strcpy(buff2,"");
 				
 				pthread_mutex_lock(&mutex);
 				int invitaciones = GuardarInvitacionAceptada(&listaInvitaciones,id_invitacion,nombre);
@@ -1156,6 +1173,7 @@ void *AtenderCliente( void *socket)
 							{
 								sprintf(lista,"%s%s/",lista,listaPartidas.partida[j].jugadores[n].jugador);
 								sockets[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
+								printf("Socket %d : %d\n lista: %s\n",n,sockets[n], lista);
 							}
 							num=listaPartidas.partida[j].num_jugadores;
 						}
@@ -1315,25 +1333,37 @@ void *AtenderCliente( void *socket)
 			int id_personaje=atoi(p);
 			
 			char buff3[512];
+			strcpy(buff3,"");
+			strcpy(buff2,"");
 			int sockes[MAX_jugadores];
-			int num=0;
 			
 			pthread_mutex_lock(&mutex);
 			AdivinarPersonaje(&listaPartidas,nombre,nombre_adivinar,id,id_personaje,buff2,buff3);
 			
 			for(int j=0;j<listaPartidas.num;j++)
 			{
-				if(listaPartidas.partida[j].partida=id)
+				printf("lista id: %d    id %d\n",listaPartidas.partida[j].partida,id);
+				
+				if(listaPartidas.partida[j].partida==id)
 				{
+					int cont=0;
 					for(int n=0;n<listaPartidas.partida[j].num_jugadores;n++)
-					{
+					{	
 						if(strcmp(listaPartidas.partida[j].jugadores[n].jugador,nombre)!=0)
+						{
+							cont++;
 							sockets[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
+						}
 					}
 					
-					for(int n=0;n<listaPartidas.partida[j].num_jugadores;n++)
+					for(int n=0;n<cont;n++)
+					{
 						if(listaPartidas.partida[j].jugadores[n].fallo==0)
+						{
 							write (sockets[j],buff3, strlen(buff3));
+							printf ("Se ha enviado el mensaje: %s\n", buff3);
+						}
+					}
 				}
 				
 			}
@@ -1343,7 +1373,7 @@ void *AtenderCliente( void *socket)
 			write(sock_conn,buff2,strlen(buff2));
 			
 			printf ("Se ha enviado el mensaje: %s\n", buff2);
-			printf ("Se ha enviado el mensaje: %s\n", buff3);
+			
 		}
 
 		else if (codigo==13)
@@ -1518,6 +1548,7 @@ int main(int argc, char *argv[])
 	
 	pthread_t thread[100];
 	num_sockets=0;
+	id_invitaciones=0;
 	
 	for(;;)
 	{ //bucle infinito
