@@ -34,7 +34,7 @@ namespace WindowsFormsApplication1
 
         delegate void DelegadoParaEscribir(string mensaje);
         delegate void DelegadoParaCerrar();
-
+        delegate void DelegadoParaHacerVisible();
 
         public class CLista_Personajes
         {
@@ -152,7 +152,8 @@ namespace WindowsFormsApplication1
             byte[] msg = null;
             DelegadoParaEscribir delegado = new DelegadoParaEscribir(Chat);
             //DelegadoParaCerrar d = new DelegadoParaCerrar(Cerrar_form);
-            
+            DelegadoParaHacerVisible fin = new DelegadoParaHacerVisible(FinPartida);
+
             switch (codigo)
             {
                 case 9: 
@@ -200,6 +201,7 @@ namespace WindowsFormsApplication1
                             //this.Invoke(d);
                             break;
                     }
+                    this.label2.Invoke(fin);
                     break;
 
                 case 15: //algun jugador ha abandonado la partida
@@ -207,7 +209,11 @@ namespace WindowsFormsApplication1
                     break;
             }
         }
-        
+
+        private void FinPartida()
+        {
+            this.label2.Visible = true;
+        }
         private void Cerrar_form()
         {
             this.Close();
@@ -216,12 +222,17 @@ namespace WindowsFormsApplication1
         private void Enviar_Click(object sender, EventArgs e)
             //Enviamos un mensaje por el chat, y lo añadimos también al del usuario
         {
-            string msj = "9/" + ID_partida + "/" + nombre + ": " + this.Chat_TextBox.Text;
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(msj);
-            server.Send(msg);
-            
-            string texto_chat = "Tú: " + this.Chat_TextBox.Text;
-            this.Chat_listBox.Items.Add(texto_chat);
+            if (Cerrar != 1)
+            {
+                string msj = "9/" + ID_partida + "/" + nombre + ": " + this.Chat_TextBox.Text;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(msj);
+                server.Send(msg);
+
+                string texto_chat = "Tú: " + this.Chat_TextBox.Text;
+                this.Chat_listBox.Items.Add(texto_chat);
+            }
+            else
+                MessageBox.Show("No puedes enviar más mensajes");
 
             this.Chat_TextBox.Text = null;
         }

@@ -1147,6 +1147,7 @@ void *AtenderCliente( void *socket)
 			char respuesta[1];
 			strcpy (respuesta, p);
 			
+			int sockets_partida[MAX_jugadores];
 			int num=0;
 			if (strcmp(respuesta,"1")==0)
 				//acepta la invitacion
@@ -1154,7 +1155,6 @@ void *AtenderCliente( void *socket)
 			{
 				int ID_partida;
 				char lista[100];
-				int sockets[MAX_jugadores];
 				
 				strcpy(lista,"");
 				strcpy(buff2,"");
@@ -1169,13 +1169,16 @@ void *AtenderCliente( void *socket)
 					{
 						if(listaPartidas.partida[j].partida==ID_partida)
 						{
+							printf("lista id partida: %d      id: %d **** invitacion aceptada\n",listaPartidas.partida[j].partida,ID_partida);
+							
 							for(int n=0;n<listaPartidas.partida[j].num_jugadores;n++)
 							{
 								sprintf(lista,"%s%s/",lista,listaPartidas.partida[j].jugadores[n].jugador);
-								sockets[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
-								printf("Socket %d : %d\n lista: %s\n",n,sockets[n], lista);
+								sockets_partida[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
+								printf("Socket %d : %d\n lista: %s\n",n,sockets_partida[n], lista);
 							}
 							num=listaPartidas.partida[j].num_jugadores;
+							printf("num %d\n",num);
 						}
 						
 					}
@@ -1191,7 +1194,7 @@ void *AtenderCliente( void *socket)
 							for(int n=0;n<listaInvitaciones.invitaciones[j].aceptadas;n++)
 							{
 								sprintf(lista,"%s%s,",lista,listaInvitaciones.invitaciones[j].jugadores[j].jugador);
-								sockets[n]=Damesocket(&listaConectados, listaInvitaciones.invitaciones[j].jugadores[n].jugador);
+								sockets_partida[n]=Damesocket(&listaConectados, listaInvitaciones.invitaciones[j].jugadores[n].jugador);
 							}
 							num=listaInvitaciones.invitaciones[j].aceptadas;
 							num_invitaciones=listaInvitaciones.invitaciones[j].invitaciones;
@@ -1206,7 +1209,7 @@ void *AtenderCliente( void *socket)
 			else 
 				//No ha aceptado la invitación
 			{
-				int sockets[MAX_jugadores];
+				
 				
 				pthread_mutex_lock(&mutex);
 				for(int j=0;j<listaInvitaciones.num;j++)
@@ -1215,7 +1218,7 @@ void *AtenderCliente( void *socket)
 					{
 						for(int n=0;n<listaInvitaciones.invitaciones[j].aceptadas;n++)
 						{
-							sockets[n]=Damesocket(&listaConectados, listaInvitaciones.invitaciones[j].jugadores[n].jugador);
+							sockets_partida[n]=Damesocket(&listaConectados, listaInvitaciones.invitaciones[j].jugadores[n].jugador);
 						}
 						num=listaInvitaciones.invitaciones[j].aceptadas;
 					}
@@ -1226,9 +1229,12 @@ void *AtenderCliente( void *socket)
 			}
 			
 			for(int j=0;j<num;j++)
-				write (sockets[j],buff2, strlen(buff2));
+			{
+				write (sockets_partida[j],buff2, strlen(buff2));
+				printf ("Se ha enviado el mensaje: %s al socket %d\n", buff2,sockets_partida[j]);
+			}
 			
-			printf ("Se ha enviado el mensaje: %s\n", buff2);
+			
 			strcpy(buff2,"");
 		}
 		else if(codigo==9)
@@ -1239,7 +1245,7 @@ void *AtenderCliente( void *socket)
 			p = strtok( NULL, "/");
 			char mensaje[400];
 			strcpy (mensaje, p);
-			int sockets[MAX_jugadores];
+			int sockets_partida[MAX_jugadores];
 			strcpy(buff2,"");
 			sprintf(buff2,"9/%d/%s",ID,mensaje);
 			int num=0;
@@ -1254,15 +1260,16 @@ void *AtenderCliente( void *socket)
 						{	
 							if(listaPartidas.partida[j].jugadores[n].fallo==0)
 							{
-								sockets[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
-								write (sockets[n],buff2, strlen(buff2));
+								sockets_partida[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
+								write (sockets_partida[n],buff2, strlen(buff2));
+								printf ("Se ha enviado el mensaje: %s al socket %d\n", buff2,sockets_partida[n]);
 							}
 						}
 					}
 				}
 				
 			}
-			printf ("Se ha enviado el mensaje: %s\n", buff2);
+			
 			strcpy(buff2,"");
 		}
 		
@@ -1335,7 +1342,7 @@ void *AtenderCliente( void *socket)
 			char buff3[512];
 			strcpy(buff3,"");
 			strcpy(buff2,"");
-			int sockes[MAX_jugadores];
+			int sockets_partida[MAX_jugadores];
 			
 			pthread_mutex_lock(&mutex);
 			AdivinarPersonaje(&listaPartidas,nombre,nombre_adivinar,id,id_personaje,buff2,buff3);
@@ -1352,16 +1359,20 @@ void *AtenderCliente( void *socket)
 						if(strcmp(listaPartidas.partida[j].jugadores[n].jugador,nombre)!=0)
 						{
 							cont++;
-							sockets[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
+							sockets_partida[n]=Damesocket(&listaConectados, listaPartidas.partida[j].jugadores[n].jugador);
 						}
 					}
 					
-					for(int n=0;n<cont;n++)
+					for(int n=0;n<cont+1;n++)
 					{
-						if(listaPartidas.partida[j].jugadores[n].fallo==0)
+						if(strcmp(listaPartidas.partida[j].jugadores[n].jugador,nombre)!=0)
 						{
-							write (sockets[j],buff3, strlen(buff3));
-							printf ("Se ha enviado el mensaje: %s\n", buff3);
+							if(listaPartidas.partida[j].jugadores[n].fallo==0)
+							{
+								
+								write (sockets_partida[n],buff3, strlen(buff3));
+								printf ("Se ha enviado el mensaje: %s\n", buff3);
+							}
 						}
 					}
 				}
@@ -1438,7 +1449,7 @@ void *AtenderCliente( void *socket)
 		{
 			p = strtok( NULL, "/");
 			int id=atoi(p);
-			int sockets[MAX_jugadores];
+			int sockets_partida[MAX_jugadores];
 			int num=0;
 			
 			pthread_mutex_lock(&mutex);
@@ -1461,7 +1472,7 @@ void *AtenderCliente( void *socket)
 					
 					for(int n=0;n<listaPartidas.partida[j].num_jugadores;n++)
 						if(listaPartidas.partida[j].jugadores[n].fallo==0)
-						   write (sockets[j],buff2, strlen(buff2));
+						   write (sockets_partida[j],buff2, strlen(buff2));
 				}
 			}
 			pthread_mutex_unlock(&mutex);

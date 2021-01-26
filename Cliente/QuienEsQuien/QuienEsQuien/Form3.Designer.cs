@@ -80,6 +80,7 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.Duracion_label = new System.Windows.Forms.Label();
             this.nombre_lbl = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.Resolver_groupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.jugador_personaje_grid)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -629,6 +630,19 @@
             this.nombre_lbl.TabIndex = 29;
             this.nombre_lbl.Text = "label2";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Amiri Quran", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            this.label2.ForeColor = System.Drawing.Color.Firebrick;
+            this.label2.Location = new System.Drawing.Point(691, 33);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(360, 59);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "FIN DE LA PARTIDA";
+            this.label2.Visible = false;
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -636,6 +650,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1890, 876);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.nombre_lbl);
             this.Controls.Add(this.Duracion_label);
             this.Controls.Add(this.rival);
@@ -713,5 +728,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView jugador_personaje_grid;
         private System.Windows.Forms.Label nombre_lbl;
+        private System.Windows.Forms.Label label2;
     }
 }

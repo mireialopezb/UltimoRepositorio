@@ -197,6 +197,10 @@ namespace WindowsFormsApplication1
 
                 if (encontrado != -1)
                 {
+                    for (j = 0; j < listaInvitaciones.Count; j++)
+                        if (listaInvitaciones[j].id == id_invitacion)
+                            listaInvitaciones.RemoveAt(j);
+
                     int cont = f3.Count;
 
                     Form3 f = new Form3(cont, listaPartidas[encontrado].ID, this.nombre, server, listaPartidas[encontrado].num, listaPartidas[encontrado].rivales);
@@ -208,10 +212,6 @@ namespace WindowsFormsApplication1
                 }
             }
 
-           // for (j = 0; j < listaInvitaciones.Count; j++)
-             //   if (listaInvitaciones[j].id == id_invitacion)
-                    //listaInvitaciones.RemoveAt(j);
-            
             DelegadoParaActualizarInvitaciones delegado = new DelegadoParaActualizarInvitaciones(ActualizaInvitaciones);
             Invitacion_Grid.Invoke(delegado);
 
@@ -710,15 +710,30 @@ namespace WindowsFormsApplication1
             //Se añade el jugador seleccionado a la lista de jugadores a los que se quiere invitar a una partida
         {
             int fila = e.RowIndex;
-            
-            if (cont < MAX_jugadores)
+
+            int encontrado = 0;
+            for (int j = 0; j < MAX_jugadores; j++)
+                if (rivales[j] == conectados[fila])
+                {
+                    encontrado = 1;
+                    MessageBox.Show("Ya has seleccionado a este jugador");
+                }
+            if (encontrado == 0)
             {
-                rivales[cont] = conectados[fila];
-                this.Invitados_textBox.Text = this.Invitados_textBox.Text  + conectados[fila] +" ";
+                if (nombre == conectados[fila])
+                    MessageBox.Show("No te puedes invitar a ti mismo");
+                else
+                {
+                    if (cont < MAX_jugadores)
+                    {
+                        rivales[cont] = conectados[fila];
+                        this.Invitados_textBox.Text = this.Invitados_textBox.Text + conectados[fila] + " ";
+                        cont++;
+                    }
+                    else
+                        MessageBox.Show("Ya no puedes invitar a más jugadores");
+                }
             }
-            else
-                MessageBox.Show("Ya no puedes invitar a más jugadores");
-            cont++;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -810,7 +825,7 @@ namespace WindowsFormsApplication1
         {
             for (int i = 0; i < listaInvitaciones.Count; i++)
             {
-               listaInvitaciones[i].tiempo++;
+               //listaInvitaciones[i].tiempo++;
 
                 if ( listaInvitaciones[i].tiempo == 10)
                 {
